@@ -7,6 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.List;
+
 @SpringBootApplication
 public class CruddemoApplication {
 
@@ -18,8 +20,38 @@ public class CruddemoApplication {
 	public CommandLineRunner commandLineRunner(StudentDao studentDao){
 		return runner -> {
 			//createStudent(studentDao);
-			createMultipleStudents(studentDao);
+			//createMultipleStudents(studentDao);
+			//readStudent(studentDao);
+			//queryForStudents(studentDao);
+			queryForStudentsByLastName(studentDao);
 		};
+	}
+
+	private void queryForStudentsByLastName(StudentDao studentDao) {
+		List<Student> theStudents = studentDao.findByLastName("Duck");
+
+		for(Student tempStudent:theStudents){
+			System.out.println(tempStudent);
+		}
+	}
+
+	private void queryForStudents(StudentDao studentDao) {
+		List<Student> theStudents = studentDao.findAll();
+		for (Student tempStudent : theStudents){
+			System.out.println(tempStudent);
+		}
+	}
+
+	private void readStudent(StudentDao studentDao) {
+		System.out.println("creating new student Object...");
+		Student tempStudent = new Student("daffy", "Duck", "daffy@duck.com");
+		System.out.println("saving the student ...");
+		studentDao.save(tempStudent);
+		int theId = tempStudent.getId();
+		System.out.println("saved student, Generated id : "+theId);
+		System.out.println("retrieving student with id: "+ theId);
+		Student myStudent = studentDao.findById(theId);
+		System.out.println("found the student: "+ myStudent);
 	}
 
 	private void createMultipleStudents(StudentDao studentDao) {
